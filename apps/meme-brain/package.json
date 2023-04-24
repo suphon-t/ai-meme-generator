@@ -1,0 +1,24 @@
+{
+  "name": "meme-brain",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "start": "node ./dist/index.mjs",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Suphon Thanakornpakapong",
+  "license": "ISC",
+  "dependencies": {
+    "@trpc/server": "^10.21.1",
+    "dotenv": "^16.0.3",
+    "fastify": "^4.15.0",
+    "openai": "^3.2.1",
+    "vite": "^4.3.1",
+    "vite-plugin-node": "^3.0.2",
+    "zod": "^3.21.4"
+  }
+}
