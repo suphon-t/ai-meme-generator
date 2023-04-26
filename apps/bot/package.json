@@ -1,0 +1,19 @@
+{
+  "name": "bot",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "",
+  "main": "./build/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node -r dotenv/config ./build/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^14.9.0",
+    "dotenv": "^16.0.3",
+    "typescript": "^5.0.4"
+  }
+}
