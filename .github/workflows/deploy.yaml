@@ -55,3 +55,25 @@ jobs:
       taskDefinition: meme-brain
       service: meme-brain
     secrets: inherit
+
+  deploy-meme-image:
+    name: Deploy meme image
+    # needs: config
+    # if: contains(fromJSON(needs.config.outputs.packages), 'meme-image')
+    uses: ./.github/workflows/deploy-ecs.yaml
+    with:
+      packageName: meme-image
+      taskDefinition: meme-image
+      service: meme-image
+    secrets: inherit
+
+  deploy-bot:
+    name: Deploy bot
+    # needs: config
+    # if: contains(fromJSON(needs.config.outputs.packages), 'bot')
+    uses: ./.github/workflows/deploy-ecs.yaml
+    with:
+      packageName: bot
+      taskDefinition: bot
+      service: bot
+    secrets: inherit
