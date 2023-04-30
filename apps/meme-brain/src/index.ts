@@ -6,6 +6,9 @@ export const server = fastify({
   maxParamLength: 5000,
 });
 
+server.get("/", async (_, reply) => {
+  reply.send("Hello World!");
+});
 server.register(fastifyTRPCPlugin, {
   prefix: "/trpc",
   trpcOptions: {
@@ -16,7 +19,7 @@ server.register(fastifyTRPCPlugin, {
 if (import.meta.env.PROD) {
   try {
     console.log("Starting server on port 3000...");
-    await server.listen({ port: 3000 });
+    await server.listen({ host: "0.0.0.0", port: 3000 });
   } catch (err) {
     server.log.error(err);
     process.exit(1);

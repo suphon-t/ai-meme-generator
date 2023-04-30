@@ -1,0 +1,16 @@
+.turbo
+**/.turbo
+
+# Output dir
+dist
+**/dist
+build
+out
+.env
+.env.local
+.env.*.local
+
+node_modules
+**/node_modules
+
+Dockerfile
