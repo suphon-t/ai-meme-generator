@@ -5,6 +5,11 @@ export default defineConfig({
   ssr: {
     format: "cjs",
   },
+  build: {
+    rollupOptions: {
+      external: ["canvas"],
+    },
+  },
   plugins: [
     ...VitePluginNode({
       adapter: "express",
