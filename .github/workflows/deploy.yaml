@@ -5,50 +5,50 @@ name: Continuous Integration
       - feat/build
 
 jobs:
-  config:
-    name: Workflow config
-    runs-on: ubuntu-latest
-    outputs:
-      packages: ${{ steps.packages.outputs.packages }}
-      filters: ${{ steps.turbo-filter.outputs.filters }}
-    steps:
-      - uses: actions/checkout@v2
-        name: Checkout Before
-        with:
-          ref: ${{ github.event.before }}
-          fetch-depth: 0
-      - id: base-sha
-        name: Set base SHA
-        run: echo "BASE_SHA=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
-      - uses: actions/checkout@v2
-        name: Checkout
-        with:
-          fetch-depth: 0
-      - name: Install turbo
-        run: npm install -g turbo
-      - id: packages
-        name: Get affected packages
-        run: |
-          PACKAGES=$(turbo run build --filter='...[${{ steps.base-sha.outputs.BASE_SHA }}]' --dry=json | jq -c '.packages')
-          echo "packages=$PACKAGES" >> $GITHUB_OUTPUT
-      - id: turbo-filter
-        name: Generate turborepo filter args
-        run: |
-          PACKAGES=$(echo '${{ steps.packages.outputs.packages }}' | jq -r '.[]')
-          FILTERS="--filter=dummy-package"
-          for PACKAGE in $PACKAGES; do
-            FILTERS="$FILTERS --filter='$PACKAGE'"
-          done
-          echo "filters=$FILTERS" >> $GITHUB_OUTPUT
-      - name: Summary
-        run: |
-          echo 'Packages: ${{ steps.packages.outputs.packages }}'
-          echo 'Turbo filters: ${{ steps.turbo-filter.outputs.filters }}'
+  # config:
+  #   name: Workflow config
+  #   runs-on: ubuntu-latest
+  #   outputs:
+  #     packages: ${{ steps.packages.outputs.packages }}
+  #     filters: ${{ steps.turbo-filter.outputs.filters }}
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #       name: Checkout Before
+  #       with:
+  #         ref: ${{ github.event.before }}
+  #         fetch-depth: 0
+  #     - id: base-sha
+  #       name: Set base SHA
+  #       run: echo "BASE_SHA=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+  #     - uses: actions/checkout@v2
+  #       name: Checkout
+  #       with:
+  #         fetch-depth: 0
+  #     - name: Install turbo
+  #       run: npm install -g turbo
+  #     - id: packages
+  #       name: Get affected packages
+  #       run: |
+  #         PACKAGES=$(turbo run build --filter='...[${{ steps.base-sha.outputs.BASE_SHA }}]' --dry=json | jq -c '.packages')
+  #         echo "packages=$PACKAGES" >> $GITHUB_OUTPUT
+  #     - id: turbo-filter
+  #       name: Generate turborepo filter args
+  #       run: |
+  #         PACKAGES=$(echo '${{ steps.packages.outputs.packages }}' | jq -r '.[]')
+  #         FILTERS="--filter=dummy-package"
+  #         for PACKAGE in $PACKAGES; do
+  #           FILTERS="$FILTERS --filter='$PACKAGE'"
+  #         done
+  #         echo "filters=$FILTERS" >> $GITHUB_OUTPUT
+  #     - name: Summary
+  #       run: |
+  #         echo 'Packages: ${{ steps.packages.outputs.packages }}'
+  #         echo 'Turbo filters: ${{ steps.turbo-filter.outputs.filters }}'
 
   deploy-meme-brain:
     name: Deploy meme brain
-    needs: config
-    if: contains(fromJSON(needs.config.outputs.packages), 'meme-brain')
+    # needs: config
+    # if: contains(fromJSON(needs.config.outputs.packages), 'meme-brain')
     uses: ./.github/workflows/deploy-ecs.yaml
     with:
       packageName: meme-brain
