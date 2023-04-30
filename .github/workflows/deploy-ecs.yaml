@@ -1,0 +1,51 @@
+name: Deploy to Cloud Run
+
+on:
+  workflow_call:
+    inputs:
+      packageName:
+        required: true
+        type: string
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AWS_REGION: ap-southeast-1
+  ECR_REPOSITORY_PREFIX: ai-meme-generator
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        name: Checkout
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE }}
+          role-session-name: github-actions
+          aws-region: ${{ env.AWS_REGION }}
+      - name: Get package directory
+        id: package-dir
+        run: |
+          PACKAGE_DIR=$(pnpm list -r --json | jq --arg packageName ${{ inputs.packageName }} -r '.[] | select( .name | contains($packageName)) | .path')
+          echo "package-dir=$PACKAGE_DIR" >> $GITHUB_OUTPUT
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@62f4f872db3836360b72999f4b87f1ff13310f3a
+      - name: Set image tag
+        run: echo "image-tag=$ECR_REGISTRY/$ECR_REPOSITORY_PREFIX/${{ inputs.packageName }}:latest" >> $GITHUB_ENV
+      - name: Build Docker image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          push: true
+          file: ${{ steps.package-dir.outputs.package-dir }}/Dockerfile
+          tags: ${{ env.image-tag }}
+          target: app
