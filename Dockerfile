@@ -1,11 +1,12 @@
 FROM node:lts-slim as base
+ARG PACKAGE_NAME
 WORKDIR /app
 RUN npm i -g turbo@1.6.3 pnpm@7.19.0
 ############################################################
 
 FROM base as pruner
 COPY . .
-RUN turbo prune --scope=meme-brain --docker
+RUN turbo prune --scope=$PACKAGE_NAME --docker
 
 ############################################################
 
@@ -18,8 +19,11 @@ COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
 RUN pnpm install --frozen-lockfile
 # Build the project
 COPY --from=pruner /app/out/full/ .
-RUN turbo run build --filter=meme-brain
+RUN turbo run build --filter=$PACKAGE_NAME
 
 # Expose the port (http & https) and run application
 EXPOSE 3000
-CMD ["pnpm", "--filter=meme-brain", "start"]
+RUN echo "#!/bin/bash" >> /app/start
+RUN echo "exec pnpm --filter=$PACKAGE_NAME start" >> /app/start
+RUN chmod +x /app/start
+ENTRYPOINT [ "/app/start" ]

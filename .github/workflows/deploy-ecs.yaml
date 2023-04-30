@@ -36,11 +36,6 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE }}
           role-session-name: github-actions
           aws-region: ${{ env.AWS_REGION }}
-      - name: Get package directory
-        id: package-dir
-        run: |
-          PACKAGE_DIR=$(pnpm list -r --json | jq --arg packageName ${{ inputs.packageName }} -r '.[] | select( .name | contains($packageName)) | .path')
-          echo "package-dir=$PACKAGE_DIR" >> $GITHUB_OUTPUT
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
       - name: Login to Amazon ECR
@@ -60,9 +55,9 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           push: true
-          file: ${{ steps.package-dir.outputs.package-dir }}/Dockerfile
           tags: ${{ env.image-tag }}
           target: app
+          build-args: PACKAGE_NAME=${{ inputs.packageName }}
       - name: Download task def
         run: |
           aws ecs describe-task-definition --task-definition ${{ inputs.taskDefinition }} --query taskDefinition > task-definition.json
