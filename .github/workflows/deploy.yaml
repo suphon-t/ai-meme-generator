@@ -52,4 +52,6 @@ jobs:
     uses: ./.github/workflows/deploy-ecs.yaml
     with:
       packageName: meme-brain
+      taskDefinition: meme-brain
+      service: meme-brain
     secrets: inherit

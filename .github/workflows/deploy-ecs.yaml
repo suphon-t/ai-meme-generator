@@ -6,6 +6,12 @@ on:
       packageName:
         required: true
         type: string
+      taskDefinition:
+        required: true
+        type: string
+      service:
+        required: true
+        type: string
 
 permissions:
   id-token: write
@@ -43,8 +49,11 @@ jobs:
       - name: Set image tag
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        run: echo "image-tag=$ECR_REGISTRY/$ECR_REPOSITORY_PREFIX/${{ inputs.packageName }}:latest" >> $GITHUB_ENV
+        run: |
+          echo "image-repo=$ECR_REGISTRY/$ECR_REPOSITORY_PREFIX/${{ inputs.packageName }}" >> $GITHUB_ENV
+          echo "image-tag=$ECR_REGISTRY/$ECR_REPOSITORY_PREFIX/${{ inputs.packageName }}:latest" >> $GITHUB_ENV
       - name: Build Docker image
+        id: build-image
         uses: docker/build-push-action@v3
         with:
           context: .
@@ -54,3 +63,20 @@ jobs:
           file: ${{ steps.package-dir.outputs.package-dir }}/Dockerfile
           tags: ${{ env.image-tag }}
           target: app
+      - name: Download task def
+        run: |
+          aws ecs describe-task-definition --task-definition ${{ inputs.taskDefinition }} --query taskDefinition > task-definition.json
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@c804dfbdd57f713b6c079302a4c01db7017a36fc
+        with:
+          task-definition: task-definition.json
+          container-name: app
+          image: "${{ env.image-tag }}@${{ steps.build-image.outputs.digest }}"
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@df9643053eda01f169e64a0e60233aacca83799a
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: ${{ inputs.service }}
+          cluster: ${{ secrets.ECS_CLUSTER }}
+          wait-for-service-stability: true
