@@ -1,35 +1,35 @@
 import { Template, templates } from "./templates";
-import { publicProcedure, router } from "./trpc";
-import { z } from "zod";
+import { initServer } from "@ts-rest/express";
 import { OpenAIApi, Configuration } from "openai";
 import { env } from "./env";
+import { contract } from "./contract";
+import { z } from "zod";
 
 const openaiConfig = new Configuration({
   apiKey: env.OPENAI_API_KEY,
 });
 const openai = new OpenAIApi(openaiConfig);
 
-export const appRouter = router({
-  helloWorld: publicProcedure.query(async () => {
-    return "Hello World!";
-  }),
-  generate: publicProcedure
-    .input(
-      z.object({
-        templateId: z.string().optional(),
-      })
-    )
-    .query(async ({ input }) => {
-      const templateId = input.templateId ?? randomMemeTemplate();
-      const template = templates[templateId];
-      if (!template) {
-        throw new Error("Invalid template");
-      }
+const s = initServer();
 
-      const memeContent = await generateMeme(template);
+export const router = s.router(contract, {
+  index: async () => {
+    return { status: 200, body: "Hello World!" };
+  },
+  generateIdea: async ({ body }) => {
+    const templateId = body.templateId ?? randomMemeTemplate();
+    const template = templates[templateId];
+    if (!template) {
+      throw new Error("Invalid template");
+    }
 
-      return { templateId, templateName: template.name, memeContent };
-    }),
+    const memeContent = await generateMeme(template);
+
+    return {
+      status: 200,
+      body: { templateId, templateName: template.name, memeContent },
+    };
+  },
 });
 
 async function generateMeme<T extends z.AnyZodObject>(template: Template<T>) {

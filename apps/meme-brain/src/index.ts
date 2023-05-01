@@ -1,29 +1,20 @@
-import fastify from "fastify";
-import { fastifyTRPCPlugin } from "@trpc/server/adapters/fastify";
-import { appRouter } from "./app";
+/// <reference types="vite/client" />
 
-export const server = fastify({
-  maxParamLength: 5000,
-});
+import express from "express";
+import bodyParser from "body-parser";
+import { createExpressEndpoints } from "@ts-rest/express";
+import { contract } from "./contract";
+import { router } from "./app";
 
-server.get("/", async (_, reply) => {
-  reply.send("Hello World!");
-});
-server.register(fastifyTRPCPlugin, {
-  prefix: "/trpc",
-  trpcOptions: {
-    router: appRouter,
-  },
-});
+export const app = express();
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+createExpressEndpoints(contract, router, app);
 
 if (import.meta.env.PROD) {
-  try {
-    console.log("Starting server on port 3000...");
-    await server.listen({ host: "0.0.0.0", port: 3000 });
-  } catch (err) {
-    server.log.error(err);
-    process.exit(1);
-  }
+  const port = process.env.port || 3000;
+  app.listen(port, () => {
+    console.log(`Listening on http://localhost:${port}/`);
+  });
 }
-
-export type AppRouter = typeof appRouter;
