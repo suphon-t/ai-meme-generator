@@ -4,10 +4,12 @@ import { contract } from "./contract";
 import { initServer, createExpressEndpoints } from "@ts-rest/express";
 
 import { createCanvas, loadImage, registerFont } from "canvas";
-import { drawText } from "./drawText";
+import { createCtx, drawText, writeCaption } from "./drawText";
 import { upload } from "./s3";
 import { v4 as uuidv4 } from "uuid";
+import { BOX } from "./customBox";
 
+import fs from "fs";
 // https://code-boxx.com/nodejs-add-text-to-image/
 
 const app = express();
@@ -23,17 +25,37 @@ const router = s.router(contract, {
     return { status: 200, body: { result: "Hello world!" } };
   },
   captionImage: async ({ body }) => {
+    const template = body.template;
     try {
-      const load_path = `./src/template/${body.template}.png`;
+      const load_path = `./src/template/${template}.png`;
       const image = await loadImage(load_path);
       const canvas = createCanvas(image.width, image.height);
-      const text0 = body.text0.toUpperCase();
-      const text1 = body.text1.toUpperCase();
-      drawText(image, canvas, text0, text1);
+      const text0 = body.text0?.toUpperCase();
+      const text1 = body.text1?.toUpperCase();
+      if (template in BOX) {
+        const ctx = createCtx(image, canvas);
+        // write text
+        if (text0 && "text0" in BOX[template]) {
+          drawText(ctx, text0, BOX[template]["text0"]!);
+        }
+        if (text1 && "text1" in BOX[template]) {
+          drawText(ctx, text1, BOX[template]["text1"]!);
+        }
+      } else {
+        // top text bottom text
+        writeCaption(image, canvas, text0, text1);
+      }
 
-      const buffer = canvas.toBuffer("image/png");
-      const uuid = uuidv4();
-      const url = await upload(`${uuid}.png`, buffer);
+      const save_path = `./src/images/${body.template}.png`;
+      const out = fs.createWriteStream(save_path);
+      const stream = canvas.createPNGStream();
+      stream.pipe(out);
+      const url = "Done";
+
+      // const buffer = canvas.toBuffer("image/png");
+      // const uuid = uuidv4();
+      // const url = await upload(`${uuid}.png`, buffer);
+
       return {
         status: 201,
         body: { img: url },

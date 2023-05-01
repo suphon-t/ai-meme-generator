@@ -1,47 +1,47 @@
 import { Canvas, CanvasRenderingContext2D, Image } from "canvas";
+import { Box } from "./customBox";
 
 const MAX_LINE = 3;
 const FONT_SIZE = 36;
 
-export function drawText(
+export function writeCaption(
   image: Image,
   canvas: Canvas,
-  text0: string,
-  text1: string
+  text0: string | undefined,
+  text1: string | undefined
 ) {
-  const ctx = canvas.getContext("2d");
-  ctx.drawImage(image, 0, 0);
-  ctx.fillStyle = "white";
-  ctx.lineWidth = 2;
-  ctx.strokeStyle = "black";
-
+  const ctx = createCtx(image, canvas);
   // top text
-  let fontSize = FONT_SIZE;
-  let lines = wrapText(ctx, text0, image.naturalWidth, fontSize);
-  while (lines.length > MAX_LINE) {
-    fontSize -= 4;
-    lines = wrapText(ctx, text0, image.naturalWidth, fontSize);
+  if (text0) {
+    let fontSize = FONT_SIZE;
+    let lines = wrapText(ctx, text0, image.naturalWidth, fontSize);
+    while (lines.length > MAX_LINE) {
+      fontSize -= 4;
+      lines = wrapText(ctx, text0, image.naturalWidth, fontSize);
+    }
+    lines.forEach((line, index) => {
+      const [text, x] = line;
+      const y = (index + 1) * fontSize;
+      ctx.strokeText(text, x, y);
+      ctx.fillText(text, x, y);
+    });
   }
-  lines.forEach((line, index) => {
-    const [text, x] = line;
-    const y = (index + 1) * fontSize;
-    ctx.strokeText(text, x, y);
-    ctx.fillText(text, x, y);
-  });
 
   // bottom text
-  fontSize = FONT_SIZE;
-  lines = wrapText(ctx, text1, image.naturalWidth, fontSize);
-  while (lines.length > MAX_LINE && fontSize > 4) {
-    fontSize -= 4;
-    lines = wrapText(ctx, text1, image.naturalWidth, fontSize);
+  if (text1) {
+    let fontSize = FONT_SIZE;
+    let lines = wrapText(ctx, text1, image.naturalWidth, fontSize);
+    while (lines.length > MAX_LINE && fontSize > 4) {
+      fontSize -= 4;
+      lines = wrapText(ctx, text1, image.naturalWidth, fontSize);
+    }
+    lines.forEach((line, index) => {
+      const [text, x] = line;
+      const y = image.naturalHeight - index * fontSize - 8;
+      ctx.strokeText(text, x, y);
+      ctx.fillText(text, x, y);
+    });
   }
-  lines.forEach((line, index) => {
-    const [text, x] = line;
-    const y = image.naturalHeight - index * fontSize - 8;
-    ctx.strokeText(text, x, y);
-    ctx.fillText(text, x, y);
-  });
   // const td0 = ctx.measureText(text0);
   // const tw0 = td0.width;
   // const th0 = td0.actualBoundingBoxAscent + td0.actualBoundingBoxDescent;
@@ -103,4 +103,32 @@ function wrapText(
   }
   // Return the line array
   return lineArray;
+}
+
+export function drawText(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  box: Box
+) {
+  let fontSize = FONT_SIZE;
+  let lines = wrapText(ctx, text, box.w, fontSize);
+  while (lines.length > MAX_LINE) {
+    fontSize -= 4;
+    lines = wrapText(ctx, text, box.w, fontSize);
+  }
+  lines.forEach((line, index) => {
+    const [text, x] = line;
+    const y = (-lines.length / 2 + index) * fontSize;
+    ctx.strokeText(text, x + box.x, y + box.y);
+    ctx.fillText(text, x + box.x, y + box.y);
+  });
+}
+
+export function createCtx(image: Image, canvas: Canvas) {
+  const ctx = canvas.getContext("2d");
+  ctx.drawImage(image, 0, 0);
+  ctx.fillStyle = "white";
+  ctx.lineWidth = 2;
+  ctx.strokeStyle = "black";
+  return ctx;
 }

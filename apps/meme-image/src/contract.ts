@@ -1,5 +1,6 @@
 import { initContract } from "@ts-rest/core";
 import { z } from "zod";
+import { TEMPLATE } from "./customBox";
 
 const c = initContract();
 
@@ -12,6 +13,11 @@ export const contract = c.router({
   captionImage: {
     method: "POST",
     path: "/caption_template",
+    body: z.object({
+      template: z.enum(TEMPLATE),
+      text0: z.string().optional(),
+      text1: z.string().optional(),
+    }),
     responses: {
       201: z.object({
         img: z.string(),
@@ -20,11 +26,6 @@ export const contract = c.router({
         message: z.string(),
       }),
     },
-    body: z.object({
-      template: z.string(),
-      text0: z.string(),
-      text1: z.string(),
-    }),
     summary: "Caption a meme template",
   },
 });
