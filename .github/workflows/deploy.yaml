@@ -64,7 +64,7 @@ jobs:
     with:
       packageName: meme-image
       taskDefinition: meme-image
-      service: meme-image
+      service: meme-image-2
     secrets: inherit
 
   deploy-bot:
