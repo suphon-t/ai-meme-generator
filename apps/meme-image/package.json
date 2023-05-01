@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "start": "node ./dist/app.cjs",
+    "start": "node --enable-source-maps ./dist/app.js",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
