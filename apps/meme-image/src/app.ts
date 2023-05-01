@@ -46,16 +46,20 @@ const router = s.router(contract, {
         writeCaption(image, canvas, text0, text1);
       }
 
-      const save_path = `./src/images/${body.template}.png`;
-      const out = fs.createWriteStream(save_path);
-      const stream = canvas.createPNGStream();
-      stream.pipe(out);
-      const url = "Done";
+      if (process.env.NODE_ENV === "development") {
+        const save_path = `./src/images/tmp.png`;
+        const out = fs.createWriteStream(save_path);
+        const stream = canvas.createPNGStream();
+        stream.pipe(out);
+        return {
+          status: 201,
+          body: { img: `Saving to ${save_path}` },
+        };
+      }
 
-      // const buffer = canvas.toBuffer("image/png");
-      // const uuid = uuidv4();
-      // const url = await upload(`${uuid}.png`, buffer);
-
+      const buffer = canvas.toBuffer("image/png");
+      const uuid = uuidv4();
+      const url = await upload(`${uuid}.png`, buffer);
       return {
         status: 201,
         body: { img: url },
