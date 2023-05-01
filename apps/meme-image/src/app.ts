@@ -3,9 +3,10 @@ import bodyParser from "body-parser";
 import { contract } from "./contract";
 import { initServer, createExpressEndpoints } from "@ts-rest/express";
 
-import fs from "fs";
 import { createCanvas, loadImage, registerFont } from "canvas";
 import { drawText } from "./drawText";
+import { upload } from "./s3";
+import { v4 as uuidv4 } from "uuid";
 
 // https://code-boxx.com/nodejs-add-text-to-image/
 
@@ -22,22 +23,24 @@ const router = s.router(contract, {
     return { status: 200, body: { result: "Hello world!" } };
   },
   captionImage: async ({ body }) => {
-    const load_path = `./src/template/${body.template}.png`;
-    const image = await loadImage(load_path);
-    const canvas = createCanvas(image.width, image.height);
-    const text0 = body.text0.toUpperCase();
-    const text1 = body.text1.toUpperCase();
-    drawText(image, canvas, text0, text1);
+    try {
+      const load_path = `./src/template/${body.template}.png`;
+      const image = await loadImage(load_path);
+      const canvas = createCanvas(image.width, image.height);
+      const text0 = body.text0.toUpperCase();
+      const text1 = body.text1.toUpperCase();
+      drawText(image, canvas, text0, text1);
 
-    const save_path = `./src/images/${body.template}.png`;
-    const out = fs.createWriteStream(save_path);
-    const stream = canvas.createPNGStream();
-    stream.pipe(out);
-    out.on("finish", () => console.log("Done"));
-    return {
-      status: 201,
-      body: { img: save_path },
-    };
+      const buffer = canvas.toBuffer("image/png");
+      const uuid = uuidv4();
+      const url = await upload(`${uuid}.png`, buffer);
+      return {
+        status: 201,
+        body: { img: url },
+      };
+    } catch (e: unknown) {
+      return { status: 400, body: { message: String(e) } };
+    }
   },
 });
 

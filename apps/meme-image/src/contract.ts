@@ -16,6 +16,9 @@ export const contract = c.router({
       201: z.object({
         img: z.string(),
       }),
+      400: z.object({
+        message: z.string(),
+      }),
     },
     body: z.object({
       template: z.string(),
