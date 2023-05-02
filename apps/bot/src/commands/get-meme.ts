@@ -2,6 +2,7 @@ import { ChatInputCommandInteraction } from "discord.js";
 import axios from "axios";
 import { Command } from "../command";
 import { MemeIdea } from "../templates";
+import { download } from "../s3.js";
 
 export const getMeme: Command = {
   name: "getmeme",
@@ -22,13 +23,14 @@ export const getMeme: Command = {
       `${process.env.MEME_IMAGE_ENDPOINT}/caption_template`,
       {
         template: memeIdea.templateId,
-        text0: "",
-        text1: "",
+        text0: memeIdea.memeContent.text0,
+        text1: memeIdea.memeContent.text1,
       }
     );
-    const memeImage: string = memeImageServiceResponse.data;
+    const memeImageFilename: string = memeImageServiceResponse.data.img;
 
-    console.log(memeImage);
+    console.log(memeImageFilename);
+    download(memeImageFilename);
 
     // get image
     await interaction.followUp(`${interaction.user.username}'s meme is served`);
