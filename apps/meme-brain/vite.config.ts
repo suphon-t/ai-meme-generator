@@ -10,9 +10,9 @@ export default defineConfig({
   },
   plugins: [
     ...VitePluginNode({
-      adapter: "fastify",
+      adapter: "express",
       appPath: "./src/index.ts",
-      exportName: "server",
+      exportName: "app",
       tsCompiler: "esbuild",
       swcOptions: {},
     }),
