@@ -21,6 +21,12 @@ export interface MemeIdea {
   memeContent: MemeText;
 }
 
+export interface GenericMemeIdea {
+  picture: string;
+  text0?: string;
+  text1?: string;
+}
+
 export interface MemeImageRequest {
   template: TemplateId;
   text0?: string;
