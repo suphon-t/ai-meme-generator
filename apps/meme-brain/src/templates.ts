@@ -21,11 +21,9 @@ const generic = template(
 
   you must respond with a valid json object containing 2 attributes:
   - picture: the description of the picture in the meme
-  - text: the text in the meme
   `,
   z.object({
     picture: z.string(),
-    text: z.string(),
   })
 );
 
@@ -35,12 +33,12 @@ const tradeOffer = template(
   please give me a meme idea using the "Trade Offer" meme template.
 
   you must respond with a valid json object containing 2 attributes:
-  - i_receive: the text to put in the "I receive" box
-  - you_receive: the text to put in the "You receive" box
+  - text0: the text to put in the "I receive" box
+  - text1: the text to put in the "You receive" box
   `,
   z.object({
-    i_receive: z.string(),
-    you_receive: z.string(),
+    text0: z.string(),
+    text1: z.string(),
   })
 );
 
@@ -50,12 +48,12 @@ const coupleInBed = template(
   please give me a meme idea using the "I Bet He's Thinking About Other Women" meme template.
 
   you must respond with a valid json object containing 2 attributes:
-  - her: the text in the woman's mind
-  - him: the text in the man's mind
+  - text0: the text in the woman's mind
+  - text1: the text in the man's mind
   `,
   z.object({
-    her: z.string(),
-    him: z.string(),
+    text0: z.string(),
+    text1: z.string(),
   })
 );
 
@@ -65,10 +63,10 @@ const surprisedPikachu = template(
   please give me a meme idea using the "Surprised Pikachu" meme template.
 
   you must respond with a valid json object containing 1 attribute:
-  - text: the text in the meme
+  - text0: the text in the meme
   `,
   z.object({
-    text: z.string(),
+    text0: z.string(),
   })
 );
 
@@ -78,10 +76,10 @@ const feelingsAboutPower = template(
   please give me a meme idea using the "What Gives People Feelings of Power" meme template.
 
   you must respond with a valid json object containing 1 attribute:
-  - text: the thing that gives people feelings of power
+  - text0: the thing that gives people feelings of power
   `,
   z.object({
-    text: z.string(),
+    text0: z.string(),
   })
 );
 
@@ -91,10 +89,10 @@ const futureWorldIf = template(
   please give me a meme idea using the "The future world if" meme template.
 
   you must respond with a valid json object containing 1 attribute:
-  - text: the text in the meme
+  - text0: the text in the meme
   `,
   z.object({
-    text: z.string(),
+    text0: z.string(),
   })
 );
 
@@ -104,10 +102,10 @@ const scientist = template(
   please give me a meme idea using the "You know, I'm something of a scientist myself" meme template.
 
   you must respond with a valid json object containing 1 attribute:
-  - text: the text in the meme
+  - text0: the text in the meme
   `,
   z.object({
-    text: z.string(),
+    text0: z.string(),
   })
 );
 
@@ -117,10 +115,10 @@ const takeMyMoney = template(
   please give me a meme idea using the "Shut Up and Take My Money" meme template.
 
   you must respond with a valid json object containing 1 attribute:
-  - text: the text in the meme
+  - text0: the text in the meme
   `,
   z.object({
-    text: z.string(),
+    text0: z.string(),
   })
 );
 
