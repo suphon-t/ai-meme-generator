@@ -106,10 +106,10 @@ const scientist = template(
   please give me a meme idea using the "You know, I'm something of a scientist myself" meme template.
 
   you must respond with a valid json object containing 1 attribute:
-  - text0: the text in the meme
+  - text1: the text in the meme
   `,
   z.object({
-    text0: z.string(),
+    text1: z.string(),
   })
 );
 
