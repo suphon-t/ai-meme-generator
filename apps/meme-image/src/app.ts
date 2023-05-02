@@ -81,7 +81,8 @@ const router = s.router(contract, {
         body: { img: key },
       };
     } catch (e: unknown) {
-      return { status: 400, body: { message: String(e) } };
+      Sentry.captureException(e);
+      return { status: 500, body: { message: String(e) } };
     }
   },
   genericMemes: async ({ body }) => {
@@ -113,7 +114,8 @@ const router = s.router(contract, {
         body: { img: filenames },
       };
     } catch (e: unknown) {
-      return { status: 400, body: { message: String(e) } };
+      Sentry.captureException(e);
+      return { status: 500, body: { message: String(e) } };
     }
   },
 });
