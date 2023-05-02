@@ -18,7 +18,7 @@ client.once(Events.ClientReady, async (c) => {
 
 client.on(Events.InteractionCreate, async (interaction: Interaction) => {
   if (!interaction.isChatInputCommand()) return;
-  console.log(interaction);
+  // console.log(interaction);
   const slashCommand = Commands.find((c) => c.name === interaction.commandName);
 
   if (!slashCommand) {
