@@ -17,7 +17,7 @@ export function writeCaption(
   if (text0) {
     let fontSize = FONT_SIZE;
     let lines = wrapText(ctx, text0, image.naturalWidth, fontSize);
-    while (lines.length > MAX_LINE) {
+    while (lines.length > MAX_LINE && fontSize > 4) {
       fontSize -= 4;
       lines = wrapText(ctx, text0, image.naturalWidth, fontSize);
     }
@@ -39,7 +39,7 @@ export function writeCaption(
     }
     lines.forEach((line, index) => {
       const [text, x] = line;
-      const y = image.naturalHeight - index * fontSize - 8;
+      const y = image.naturalHeight - (lines.length - index - 1) * fontSize - 8;
       ctx.strokeText(text, x, y);
       ctx.fillText(text, x, y);
     });
