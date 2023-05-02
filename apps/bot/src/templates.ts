@@ -1,4 +1,4 @@
-enum TemplateId {
+export enum TemplateId {
   "generic",
   "tradeOffer",
   "coupleInBed",
@@ -8,6 +8,8 @@ enum TemplateId {
   "scientist",
   "takeMyMoney",
   "brian",
+  "oneDoesNotSimply",
+  "uno",
 }
 
 export interface MemeText {
@@ -15,16 +17,16 @@ export interface MemeText {
   text1?: string;
 }
 
-export interface MemeIdea {
-  templateId: TemplateId;
-  templateName: string;
-  memeContent: MemeText;
-}
-
 export interface GenericMemeIdea {
   picture: string;
   text0?: string;
   text1?: string;
+}
+
+export interface MemeIdea {
+  templateId: TemplateId;
+  templateName: string;
+  memeContent: MemeText | GenericMemeIdea;
 }
 
 export interface MemeImageRequest {
