@@ -28,4 +28,20 @@ export const contract = c.router({
     },
     summary: "Caption a meme template",
   },
+  searchImages: {
+    method: "POST",
+    path: "/search",
+    body: z.object({
+      template: z.string(),
+    }),
+    responses: {
+      201: z.object({
+        img: z.string(),
+      }),
+      400: z.object({
+        message: z.string(),
+      }),
+    },
+    summary: "Image Search",
+  },
 });
