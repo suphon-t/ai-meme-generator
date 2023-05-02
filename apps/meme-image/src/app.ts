@@ -10,6 +10,7 @@ import { v4 as uuidv4 } from "uuid";
 import { BOX } from "./customBox";
 
 import fs from "fs";
+import google from "googlethis";
 // https://code-boxx.com/nodejs-add-text-to-image/
 
 const app = express();
@@ -59,14 +60,24 @@ const router = s.router(contract, {
 
       const buffer = canvas.toBuffer("image/png");
       const uuid = uuidv4();
-      const url = await upload(`${uuid}.png`, buffer);
+      const key = `${uuid}.png`;
+      await upload(key, buffer);
       return {
         status: 201,
-        body: { img: url },
+        body: { img: key },
       };
     } catch (e: unknown) {
       return { status: 400, body: { message: String(e) } };
     }
+  },
+  searchImages: async ({ body }) => {
+    const images = await google.image(body.template, { safe: false });
+    return {
+      status: 200,
+      body: {
+        img: images[0].url,
+      },
+    };
   },
 });
 

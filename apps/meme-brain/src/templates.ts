@@ -126,6 +126,21 @@ const takeMyMoney = template(
   })
 );
 
+const brian = template(
+  "Bad Luck Brian",
+  `
+  please give me a meme idea using the "Bad Luck Brian" meme template.
+
+  you must respond with a valid json object containing 1 attribute:
+  - text0: the top text in the meme
+  - text1: the bottom text in the meme
+  `,
+  z.object({
+    text0: z.string(),
+    text1: z.string(),
+  })
+);
+
 export const templates = {
   generic,
   tradeOffer,
@@ -135,4 +150,5 @@ export const templates = {
   future,
   scientist,
   takeMyMoney,
+  brian,
 } as const;
