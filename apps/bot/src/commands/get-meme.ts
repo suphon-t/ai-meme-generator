@@ -13,6 +13,7 @@ export const getMeme: Command = {
       `${process.env.MEME_BRAIN_ENDPOINT}/generate_idea`
     );
     const memeIdea: MemeIdea = memeBrainServiceResponse.data;
+    console.log(memeIdea);
 
     // image service
     if (memeIdea.templateId === undefined) {
@@ -29,10 +30,13 @@ export const getMeme: Command = {
     );
     const memeImageFilename: string = memeImageServiceResponse.data.img;
 
-    console.log(memeImageFilename);
-    download(memeImageFilename);
-
     // get image
-    await interaction.followUp(`${interaction.user.username}'s meme is served`);
+    console.log(memeImageFilename);
+    await download(memeImageFilename);
+
+    await interaction.followUp({
+      content: `${interaction.user.username}'s meme is served`,
+      files: [{ attachment: memeImageFilename }],
+    });
   },
 };
