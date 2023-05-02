@@ -59,10 +59,11 @@ const router = s.router(contract, {
 
       const buffer = canvas.toBuffer("image/png");
       const uuid = uuidv4();
-      const url = await upload(`${uuid}.png`, buffer);
+      const key = `${uuid}.png`;
+      await upload(key, buffer);
       return {
         status: 201,
-        body: { img: url },
+        body: { img: key },
       };
     } catch (e: unknown) {
       return { status: 400, body: { message: String(e) } };
