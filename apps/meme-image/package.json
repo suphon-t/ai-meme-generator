@@ -19,6 +19,7 @@
     "vite-plugin-node": "^3.0.2"
   },
   "dependencies": {
+    "@sentry/node": "^7.50.0",
     "@ts-rest/core": "^3.19.3",
     "@ts-rest/express": "^3.19.3",
     "aws-sdk": "^2.1368.0",

@@ -12,11 +12,22 @@ import { BOX } from "./customBox";
 import download from "image-downloader";
 
 import { image_search } from "duckduckgo-images-api";
+import * as Sentry from "@sentry/node";
+
+Sentry.init({
+  dsn: process.env.SENTRY_DSN,
+  integrations: [
+    new Sentry.Integrations.Http({ tracing: true }),
+    ...Sentry.autoDiscoverNodePerformanceMonitoringIntegrations(),
+  ],
+});
 
 // import fs from "fs";
 // import google from "googlethis";
 
 const app = express();
+app.use(Sentry.Handlers.requestHandler());
+app.use(Sentry.Handlers.tracingHandler());
 // app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -108,6 +119,8 @@ const router = s.router(contract, {
 });
 
 createExpressEndpoints(contract, router, app);
+
+app.use(Sentry.Handlers.errorHandler());
 
 if (import.meta.env.PROD) {
   const port = process.env.port || 3333;

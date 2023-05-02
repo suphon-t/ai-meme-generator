@@ -61,6 +61,7 @@ importers:
 
   apps/meme-image:
     specifiers:
+      '@sentry/node': ^7.50.0
       '@ts-rest/core': ^3.19.3
       '@ts-rest/express': ^3.19.3
       '@types/body-parser': ^1.19.2
@@ -81,6 +82,7 @@ importers:
       vite-plugin-node: ^3.0.2
       zod: ^3.21.4
     dependencies:
+      '@sentry/node': 7.50.0
       '@ts-rest/core': 3.19.3_zod@3.21.4
       '@ts-rest/express': 3.19.3_ani7pfbydonexigzpwcihidwbu
       aws-sdk: 2.1368.0

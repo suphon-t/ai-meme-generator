@@ -17,6 +17,7 @@
     "@types/express": "^4.17.17"
   },
   "dependencies": {
+    "@sentry/node": "^7.50.0",
     "@ts-rest/core": "^3.19.3",
     "@ts-rest/express": "^3.19.3",
     "body-parser": "^1.20.2",
