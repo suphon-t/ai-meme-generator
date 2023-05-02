@@ -1,6 +1,6 @@
 export const TEMPLATE = [
   "brian",
-  "one",
+  "oneDoesNotSimply",
   "coupleInBed",
   "scientist",
   "power",
@@ -8,6 +8,7 @@ export const TEMPLATE = [
   "surprisedPikachu",
   "takeMyMoney",
   "tradeOffer",
+  "uno",
 ] as const;
 
 export interface Box {
@@ -52,6 +53,18 @@ export const BOX: Record<string, { text0?: Box; text1?: Box }> = {
     text1: {
       x: 275,
       y: 230,
+      w: 200,
+    },
+  },
+  uno: {
+    text0: {
+      x: 50,
+      y: 225,
+      w: 200,
+    },
+    text1: {
+      x: 275,
+      y: 90,
       w: 200,
     },
   },
