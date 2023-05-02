@@ -5,6 +5,9 @@ export const TEMPLATE = [
   "scientist",
   "power",
   "future",
+  "surprisedPikachu",
+  "takeMyMoney",
+  "tradeOffer",
 ] as const;
 
 export interface Box {
@@ -31,6 +34,25 @@ export const BOX: Record<string, { text0?: Box; text1?: Box }> = {
       x: 0,
       y: 470,
       w: 190,
+    },
+  },
+  surprisedPikachu: {
+    text0: {
+      x: 0,
+      y: 125,
+      w: 500,
+    },
+  },
+  tradeOffer: {
+    text0: {
+      x: 10,
+      y: 230,
+      w: 200,
+    },
+    text1: {
+      x: 275,
+      y: 230,
+      w: 200,
     },
   },
 };
