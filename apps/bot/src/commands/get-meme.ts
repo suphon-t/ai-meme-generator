@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction } from "discord.js";
+import { BufferResolvable, ChatInputCommandInteraction } from "discord.js";
 import axios from "axios";
 import { Command } from "../command";
 import { MemeIdea } from "../templates";
@@ -32,11 +32,13 @@ export const getMeme: Command = {
 
     // get image
     console.log(memeImageFilename);
-    await download(memeImageFilename);
+    const memeImageBuffer = (await download(
+      memeImageFilename
+    )!) as BufferResolvable;
 
     await interaction.followUp({
       content: `${interaction.user.username}'s meme is served`,
-      files: [{ attachment: memeImageFilename }],
+      files: [{ attachment: memeImageBuffer }],
     });
   },
 };

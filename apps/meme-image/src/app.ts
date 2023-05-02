@@ -47,16 +47,16 @@ const router = s.router(contract, {
         writeCaption(image, canvas, text0, text1);
       }
 
-      if (process.env.NODE_ENV === "development") {
-        const save_path = `./src/images/tmp.png`;
-        const out = fs.createWriteStream(save_path);
-        const stream = canvas.createPNGStream();
-        stream.pipe(out);
-        return {
-          status: 201,
-          body: { img: `Saving to ${save_path}` },
-        };
-      }
+      // if (process.env.NODE_ENV === "development") {
+      //   const save_path = `./src/images/tmp.png`;
+      //   const out = fs.createWriteStream(save_path);
+      //   const stream = canvas.createPNGStream();
+      //   stream.pipe(out);
+      //   return {
+      //     status: 201,
+      //     body: { img: `Saving to ${save_path}` },
+      //   };
+      // }
 
       const buffer = canvas.toBuffer("image/png");
       const uuid = uuidv4();
