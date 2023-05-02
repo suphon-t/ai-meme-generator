@@ -141,6 +141,36 @@ const brian = template(
   })
 );
 
+const oneDoesNotSimply = template(
+  "One Does Not Simply",
+  `
+  please give me a meme idea using the "One Does Not Simply" meme template.
+
+  you must respond with a valid json object containing 1 attribute:
+  - text0: the top text in the meme
+  - text1: the bottom text in the meme
+  `,
+  z.object({
+    text0: z.string(),
+    text1: z.string(),
+  })
+);
+
+const uno = template(
+  "UNO Draw 25 Cards",
+  `
+  please give me a meme idea using the "UNO Draw 25 Cards" meme template.
+
+  you must respond with a valid json object containing 1 attribute:
+  - text0: the left text in the meme
+  - text1: the right text in the meme
+  `,
+  z.object({
+    text0: z.string(),
+    text1: z.string(),
+  })
+);
+
 export const templates = {
   generic,
   tradeOffer,
@@ -151,4 +181,6 @@ export const templates = {
   scientist,
   takeMyMoney,
   brian,
+  oneDoesNotSimply,
+  uno,
 } as const;
