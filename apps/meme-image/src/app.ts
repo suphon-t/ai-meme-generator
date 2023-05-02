@@ -13,7 +13,7 @@ import download from "image-downloader";
 
 import { image_search } from "duckduckgo-images-api";
 
-import fs from "fs";
+// import fs from "fs";
 // import google from "googlethis";
 
 const app = express();
@@ -86,9 +86,15 @@ const router = s.router(contract, {
           const canvas = createCanvas(image.width, image.height);
           writeCaption(image, canvas, text0, text1);
 
-          const out = fs.createWriteStream(path);
-          const stream = canvas.createPNGStream();
-          stream.pipe(out);
+          // if (process.env.NODE_ENV === "development") {
+          //   const out = fs.createWriteStream(path);
+          //   const stream = canvas.createPNGStream();
+          //   stream.pipe(out);
+          //   return;
+          // }
+
+          const buffer = canvas.toBuffer("image/png");
+          await upload(filename, buffer);
         })
       );
       return {
@@ -119,8 +125,9 @@ export async function searchImages(query: string) {
     moderate: true,
   });
   // download images
-  const promises = results.slice(0, 4).map(async (result, index) => {
-    const filename = `tmp${index}.png`;
+  const promises = results.slice(0, 4).map(async (result) => {
+    const uuid = uuidv4();
+    const filename = `${uuid}.png`;
     const options = {
       url: result.thumbnail,
       dest: `${process.cwd()}/src/images/${filename}`,
