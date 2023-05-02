@@ -89,7 +89,7 @@ function wrapText(
       // Then the line is finished, push the current line into "lineArray"
       const lineWidth = ctx.measureText(line).width;
       const mx = (maxWidth - lineWidth) / 2; // center x
-      lineArray.push([line, mx] as const);
+      lineArray.push([line, mx, lineWidth] as const);
       // Increase the line height, so a new line is started
       // y += fontSize;
       // Update line and test line to use this word as the first word on the next line
@@ -100,7 +100,7 @@ function wrapText(
     if (i === words.length - 1) {
       const lineWidth = ctx.measureText(line).width;
       const mx = (maxWidth - lineWidth) / 2; // center x
-      lineArray.push([line, mx] as const);
+      lineArray.push([line, mx, lineWidth] as const);
     }
   }
   // Return the line array
@@ -114,7 +114,10 @@ export function drawText(
 ) {
   let fontSize = FONT_SIZE;
   let lines = wrapText(ctx, text, box.w, fontSize);
-  while (lines.length > MAX_LINE) {
+  while (
+    fontSize > 4 &&
+    (lines.length > MAX_LINE || lines.some((line) => line[2] > box.w)) // line width greater
+  ) {
     fontSize -= 4;
     lines = wrapText(ctx, text, box.w, fontSize);
   }
