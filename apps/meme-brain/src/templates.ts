@@ -21,9 +21,13 @@ const generic = template(
 
   you must respond with a valid json object containing 2 attributes:
   - picture: the description of the picture in the meme
+  - text0: the top text in the meme (optional)
+  - text1: the bottom text in the meme
   `,
   z.object({
     picture: z.string(),
+    text0: z.string().optional(),
+    text1: z.string(),
   })
 );
 
