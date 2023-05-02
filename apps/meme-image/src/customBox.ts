@@ -32,7 +32,7 @@ export const BOX: Record<string, { text0?: Box; text1?: Box }> = {
   power: {
     text0: {
       x: 0,
-      y: 470,
+      y: 460,
       w: 190,
     },
   },
