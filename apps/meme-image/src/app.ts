@@ -9,9 +9,12 @@ import { upload } from "./s3";
 import { v4 as uuidv4 } from "uuid";
 import { BOX } from "./customBox";
 
+import download from "image-downloader";
+
+import { image_search } from "duckduckgo-images-api";
+
 import fs from "fs";
-import google from "googlethis";
-// https://code-boxx.com/nodejs-add-text-to-image/
+// import google from "googlethis";
 
 const app = express();
 // app.use(cors());
@@ -25,14 +28,14 @@ const router = s.router(contract, {
   index: async () => {
     return { status: 200, body: { result: "Hello world!" } };
   },
-  captionImage: async ({ body }) => {
+  captionTemplate: async ({ body }) => {
     const template = body.template;
+    const text0 = body.text0?.toUpperCase();
+    const text1 = body.text1?.toUpperCase();
     try {
-      const load_path = `./src/template/${template}.png`;
-      const image = await loadImage(load_path);
+      const loadPath = `./src/template/${template}.png`;
+      const image = await loadImage(loadPath);
       const canvas = createCanvas(image.width, image.height);
-      const text0 = body.text0?.toUpperCase();
-      const text1 = body.text1?.toUpperCase();
       if (template in BOX) {
         const ctx = createCtx(image, canvas);
         // write text
@@ -47,16 +50,16 @@ const router = s.router(contract, {
         writeCaption(image, canvas, text0, text1);
       }
 
-      if (process.env.NODE_ENV === "development") {
-        const save_path = `./src/images/tmp.png`;
-        const out = fs.createWriteStream(save_path);
-        const stream = canvas.createPNGStream();
-        stream.pipe(out);
-        return {
-          status: 201,
-          body: { img: `Saving to ${save_path}` },
-        };
-      }
+      // if (process.env.NODE_ENV === "development") {
+      //   const save_path = `./src/images/tmp.png`;
+      //   const out = fs.createWriteStream(save_path);
+      //   const stream = canvas.createPNGStream();
+      //   stream.pipe(out);
+      //   return {
+      //     status: 201,
+      //     body: { img: `Saving to ${save_path}` },
+      //   };
+      // }
 
       const buffer = canvas.toBuffer("image/png");
       const uuid = uuidv4();
@@ -70,14 +73,31 @@ const router = s.router(contract, {
       return { status: 400, body: { message: String(e) } };
     }
   },
-  searchImages: async ({ body }) => {
-    const images = await google.image(body.template, { safe: false });
-    return {
-      status: 200,
-      body: {
-        img: images[0].url,
-      },
-    };
+  genericMemes: async ({ body }) => {
+    const picture = body.picture;
+    const text0 = body.text0?.toUpperCase();
+    const text1 = body.text1?.toUpperCase();
+    try {
+      const filenames = await searchImages(picture);
+      await Promise.all(
+        filenames.map(async (filename) => {
+          const path = `./src/images/${filename}`;
+          const image = await loadImage(path);
+          const canvas = createCanvas(image.width, image.height);
+          writeCaption(image, canvas, text0, text1);
+
+          const out = fs.createWriteStream(path);
+          const stream = canvas.createPNGStream();
+          stream.pipe(out);
+        })
+      );
+      return {
+        status: 201,
+        body: { img: filenames },
+      };
+    } catch (e: unknown) {
+      return { status: 400, body: { message: String(e) } };
+    }
   },
 });
 
@@ -91,3 +111,22 @@ if (import.meta.env.PROD) {
 }
 
 export const viteNodeApp = app;
+
+export async function searchImages(query: string) {
+  // const images = await google.image(body.template, { safe: false });
+  const results = await image_search({
+    query,
+    moderate: true,
+  });
+  // download images
+  const promises = results.slice(0, 4).map(async (result, index) => {
+    const filename = `tmp${index}.png`;
+    const options = {
+      url: result.thumbnail,
+      dest: `${process.cwd()}/src/images/${filename}`,
+    };
+    await download.image(options);
+    return filename;
+  });
+  return Promise.all(promises);
+}

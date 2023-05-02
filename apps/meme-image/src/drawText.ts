@@ -1,6 +1,8 @@
 import { Canvas, CanvasRenderingContext2D, Image } from "canvas";
 import { Box } from "./customBox";
 
+// https://code-boxx.com/nodejs-add-text-to-image/
+
 const MAX_LINE = 3;
 const FONT_SIZE = 36;
 
