@@ -1,8 +1,13 @@
 import dotenv from "dotenv";
 import { Client, Events, GatewayIntentBits, Interaction } from "discord.js";
 import { Commands } from "./commands/index.js";
+import { init as initSentry, captureException } from "@sentry/node";
 
 dotenv.config();
+
+initSentry({
+  dsn: process.env.SENTRY_DSN,
+});
 
 const client: Client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
@@ -29,6 +34,10 @@ client.on(Events.InteractionCreate, async (interaction: Interaction) => {
   await interaction.deferReply();
 
   slashCommand.run(interaction);
+});
+
+client.on(Events.Error, async (e) => {
+  captureException(e);
 });
 
 client.login(process.env.DISCORD_TOKEN);
