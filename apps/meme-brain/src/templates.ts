@@ -74,7 +74,7 @@ const surprisedPikachu = template(
   })
 );
 
-const feelingsAboutPower = template(
+const power = template(
   "Feelings About Power",
   `
   please give me a meme idea using the "What Gives People Feelings of Power" meme template.
@@ -87,7 +87,7 @@ const feelingsAboutPower = template(
   })
 );
 
-const futureWorldIf = template(
+const future = template(
   "Future World If",
   `
   please give me a meme idea using the "The future world if" meme template.
@@ -131,8 +131,8 @@ export const templates = {
   tradeOffer,
   coupleInBed,
   surprisedPikachu,
-  feelingsAboutPower,
-  futureWorldIf,
+  power,
+  future,
   scientist,
   takeMyMoney,
 } as const;

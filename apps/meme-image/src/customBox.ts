@@ -1,7 +1,7 @@
 export const TEMPLATE = [
   "brian",
   "one",
-  "bet",
+  "coupleInBed",
   "scientist",
   "power",
   "future",
@@ -14,7 +14,7 @@ export interface Box {
 }
 
 export const BOX: Record<string, { text0?: Box; text1?: Box }> = {
-  bet: {
+  coupleInBed: {
     text0: {
       x: 25,
       y: 275,
