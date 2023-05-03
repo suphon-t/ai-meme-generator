@@ -1,6 +1,6 @@
 import { ChatInputCommandInteraction } from "discord.js";
 import { Command } from "../command";
-import { generateMeme } from "../generate-meme";
+import { generateMeme } from "../generate-meme.js";
 
 export const getMeme: Command = {
   name: "getmeme",

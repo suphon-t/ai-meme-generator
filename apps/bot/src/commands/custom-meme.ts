@@ -3,8 +3,8 @@ import {
   ChatInputCommandInteraction,
 } from "discord.js";
 import { Command } from "../command";
-import { generateMeme } from "../generate-meme";
-import { stringToTemplateId } from "../templates";
+import { generateMeme } from "../generate-meme.js";
+import { stringToTemplateId } from "../templates.js";
 
 export const customMeme: Command = {
   name: "custommeme",

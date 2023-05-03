@@ -1,6 +1,6 @@
 import axios from "axios";
-import { GenericMemeIdea, MemeIdea, TemplateId } from "./templates";
-import { download } from "./s3";
+import { GenericMemeIdea, MemeIdea, TemplateId } from "./templates.js";
+import { download } from "./s3.js";
 
 export interface GenerateMemeOptions {
   templateId?: TemplateId;
