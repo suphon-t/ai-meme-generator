@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 import { Client, Events, GatewayIntentBits, Interaction } from "discord.js";
 import { Commands } from "./commands/index.js";
 import { init as initSentry, captureException } from "@sentry/node";
+import { isAxiosError } from "axios";
 
 dotenv.config();
 
@@ -36,7 +37,11 @@ client.on(Events.InteractionCreate, async (interaction: Interaction) => {
     await slashCommand.run(interaction);
   } catch (err) {
     captureException(err);
-    if (err instanceof Error) {
+    if (isAxiosError(err)) {
+      await interaction.followUp(
+        `An error occured, sorry\nAxios Error: ${err.message}\n${err.config?.url}\n${err.response?.data}`
+      );
+    } else if (err instanceof Error) {
       await interaction.followUp(
         `An error occured, sorry\nError: ${err.message}\n${err.stack}`
       );

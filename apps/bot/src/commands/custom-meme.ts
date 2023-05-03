@@ -23,7 +23,7 @@ export const customMeme: Command = {
         (interaction.options.getString("template") ??
           "") as keyof typeof stringToTemplateId
       ];
-    if (templateId === null) {
+    if (!templateId) {
       await interaction.followUp(
         `Invalid template. Valid templates are: ${Object.keys(
           stringToTemplateId
