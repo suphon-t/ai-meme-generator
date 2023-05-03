@@ -36,7 +36,13 @@ client.on(Events.InteractionCreate, async (interaction: Interaction) => {
     await slashCommand.run(interaction);
   } catch (err) {
     captureException(err);
-    await interaction.followUp("An error occured, sorry");
+    if (err instanceof Error) {
+      await interaction.followUp(
+        `An error occured, sorry\nError: ${err.message}\n${err.stack}`
+      );
+    } else {
+      await interaction.followUp(`An error occured, sorry`);
+    }
   }
 });
 
