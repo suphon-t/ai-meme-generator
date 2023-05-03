@@ -18,11 +18,10 @@ export const customMeme: Command = {
     },
   ],
   run: async (interaction: ChatInputCommandInteraction) => {
+    const templateInput = interaction.options.getString("template") ?? "";
+    console.log("template input:", templateInput);
     const templateId =
-      stringToTemplateId[
-        (interaction.options.getString("template") ??
-          "") as keyof typeof stringToTemplateId
-      ];
+      stringToTemplateId[templateInput as keyof typeof stringToTemplateId];
     if (!templateId) {
       await interaction.followUp(
         `Invalid template. Valid templates are: ${Object.keys(
