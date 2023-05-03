@@ -16,9 +16,16 @@ export const customMeme: Command = {
       description: "The meme template to use",
       required: true,
     },
+    {
+      type: ApplicationCommandOptionType.String,
+      name: "topic",
+      description: "The topic of the meme",
+      required: false,
+    },
   ],
   run: async (interaction: ChatInputCommandInteraction) => {
     const templateInput = interaction.options.getString("template") ?? "";
+    const topic = interaction.options.getString("topic") ?? "";
     console.log("template input:", templateInput);
     const templateId = stringToTemplateId[templateInput];
     if (!templateId) {
@@ -29,7 +36,7 @@ export const customMeme: Command = {
       );
       return;
     }
-    const memeImageBuffer = await generateMeme({ templateId });
+    const memeImageBuffer = await generateMeme({ templateId, topic });
 
     await interaction.followUp({
       content: `${interaction.user.username}'s meme is served`,

@@ -4,6 +4,7 @@ import { download } from "./s3.js";
 
 export interface GenerateMemeOptions {
   templateId?: TemplateId;
+  topic?: string;
 }
 
 export async function generateMeme(options: GenerateMemeOptions = {}) {
@@ -12,6 +13,7 @@ export async function generateMeme(options: GenerateMemeOptions = {}) {
     `${process.env.MEME_BRAIN_ENDPOINT}/generate_idea`,
     {
       templateId: options.templateId,
+      topic: options.topic,
     }
   );
   const memeIdea: MemeIdea = memeBrainServiceResponse.data;

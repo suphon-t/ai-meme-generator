@@ -21,6 +21,7 @@ export const contract = c.router({
     },
     body: z.object({
       templateId: z.string().optional(),
+      topic: z.string().optional(),
     }),
     summary: "Caption a meme template",
   },
