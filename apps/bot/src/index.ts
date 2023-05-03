@@ -32,8 +32,12 @@ client.on(Events.InteractionCreate, async (interaction: Interaction) => {
   }
 
   await interaction.deferReply();
-
-  await slashCommand.run(interaction);
+  try {
+    await slashCommand.run(interaction);
+  } catch (err) {
+    captureException(err);
+    await interaction.followUp("An error occured, sorry");
+  }
 });
 
 client.on(Events.Error, async (e) => {

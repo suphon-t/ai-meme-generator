@@ -1,25 +1,19 @@
 import { ChatInputCommandInteraction } from "discord.js";
 import { Command } from "../command";
 import { TemplateId } from "../templates";
-import { captureException } from "@sentry/node";
 import { generateMeme } from "../generate-meme";
 
 export const genericMeme: Command = {
   name: "getgenericmeme",
   description: "Make a meme with no template from OpenAI and image search",
   run: async (interaction: ChatInputCommandInteraction) => {
-    try {
-      const memeImageBuffer = await generateMeme({
-        templateId: TemplateId.generic,
-      });
+    const memeImageBuffer = await generateMeme({
+      templateId: TemplateId.generic,
+    });
 
-      await interaction.followUp({
-        content: `${interaction.user.username}'s meme is served`,
-        files: [{ attachment: memeImageBuffer }],
-      });
-    } catch (err) {
-      captureException(err);
-      await interaction.followUp("An error occured, sorry");
-    }
+    await interaction.followUp({
+      content: `${interaction.user.username}'s meme is served`,
+      files: [{ attachment: memeImageBuffer }],
+    });
   },
 };
