@@ -4,5 +4,5 @@ import {
 } from "discord.js";
 
 export interface Command extends ChatInputApplicationCommandData {
-  run: (interaction: ChatInputCommandInteraction) => void;
+  run: (interaction: ChatInputCommandInteraction) => Promise<void>;
 }

@@ -33,7 +33,7 @@ client.on(Events.InteractionCreate, async (interaction: Interaction) => {
 
   await interaction.deferReply();
 
-  slashCommand.run(interaction);
+  await slashCommand.run(interaction);
 });
 
 client.on(Events.Error, async (e) => {
