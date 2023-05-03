@@ -12,6 +12,20 @@ export enum TemplateId {
   "uno",
 }
 
+export const stringToTemplateId = {
+  generic: TemplateId.generic,
+  tradeOffer: TemplateId.tradeOffer,
+  coupleInBed: TemplateId.coupleInBed,
+  surprisedPikachu: TemplateId.surprisedPikachu,
+  power: TemplateId.power,
+  future: TemplateId.future,
+  scientist: TemplateId.scientist,
+  takeMyMoney: TemplateId.takeMyMoney,
+  brian: TemplateId.brian,
+  oneDoesNotSimply: TemplateId.oneDoesNotSimply,
+  uno: TemplateId.uno,
+};
+
 export interface MemeText {
   text0?: string;
   text1?: string;
