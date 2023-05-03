@@ -39,7 +39,9 @@ client.on(Events.InteractionCreate, async (interaction: Interaction) => {
     captureException(err);
     if (isAxiosError(err)) {
       await interaction.followUp(
-        `An error occured, sorry\nAxios Error: ${err.message}\n${err.config?.url}\n${err.response?.data}`
+        `An error occured, sorry\nAxios Error: ${err.message}\n${
+          err.config?.url
+        }\n${JSON.stringify(err.response?.data ?? null, null, 2)}`
       );
     } else if (err instanceof Error) {
       await interaction.followUp(
