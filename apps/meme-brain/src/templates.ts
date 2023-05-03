@@ -156,18 +156,18 @@ const oneDoesNotSimply = template(
   })
 );
 
-const uno = template(
-  "UNO Draw 25 Cards",
-  `
-  please give me a meme idea using the "UNO Draw 25 Cards" meme template.
+// const uno = template(
+//   "UNO Draw 25 Cards",
+//   `
+//   please give me a meme idea using the "UNO Draw 25 Cards" meme template.
 
-  you must respond with a valid json object containing 1 attribute without trailing commas:
-  - text0: a short action in the card, which makes sense but one would not do. Do not include "draw 25 cards"
-  `,
-  z.object({
-    text0: z.string(),
-  })
-);
+//   you must respond with a valid json object containing 1 attribute without trailing commas:
+//   - text0: a short action in the card, which makes sense but one would not do. Do not include "draw 25 cards"
+//   `,
+//   z.object({
+//     text0: z.string(),
+//   })
+// );
 
 export const templates = {
   generic,
@@ -180,5 +180,5 @@ export const templates = {
   takeMyMoney,
   brian,
   oneDoesNotSimply,
-  uno,
+  // uno,
 } as const;

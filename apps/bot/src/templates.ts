@@ -8,8 +8,8 @@ export type TemplateId =
   | "scientist"
   | "takeMyMoney"
   | "brian"
-  | "oneDoesNotSimply"
-  | "uno";
+  | "oneDoesNotSimply";
+// | "uno"
 
 export const stringToTemplateId: Record<string, TemplateId | undefined> = {
   generic: "generic",
@@ -22,7 +22,7 @@ export const stringToTemplateId: Record<string, TemplateId | undefined> = {
   takeMyMoney: "takeMyMoney",
   brian: "brian",
   oneDoesNotSimply: "oneDoesNotSimply",
-  uno: "uno",
+  // uno: "uno",
 };
 
 export interface MemeText {
