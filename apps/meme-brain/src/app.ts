@@ -4,6 +4,7 @@ import { OpenAIApi, Configuration } from "openai";
 import { env } from "./env";
 import { contract } from "./contract";
 import { z } from "zod";
+import JSON5 from "json5";
 
 const openaiConfig = new Configuration({
   apiKey: env.OPENAI_API_KEY,
@@ -59,7 +60,7 @@ async function generateMeme<T extends z.AnyZodObject>(
   }
   const { content } = choice.message;
   console.log("content response", content);
-  return template.shape.parse(JSON.parse(content));
+  return template.shape.parse(JSON5.parse(content));
 }
 
 function randomMemeTemplate() {
