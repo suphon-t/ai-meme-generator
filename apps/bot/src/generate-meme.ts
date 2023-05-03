@@ -23,7 +23,7 @@ export async function generateMeme(options: GenerateMemeOptions = {}) {
   }
 
   let memeImageFilename: string;
-  if (memeIdea.templateId === TemplateId.generic) {
+  if (memeIdea.templateId === "generic") {
     const genericMemeIdea = memeIdea.memeContent as GenericMemeIdea;
     const memeImageServiceResponse = await axios.post(
       `${process.env.MEME_IMAGE_ENDPOINT}/generic_memes`,

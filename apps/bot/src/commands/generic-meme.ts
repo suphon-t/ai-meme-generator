@@ -1,6 +1,5 @@
 import { ChatInputCommandInteraction } from "discord.js";
 import { Command } from "../command";
-import { TemplateId } from "../templates.js";
 import { generateMeme } from "../generate-meme.js";
 
 export const genericMeme: Command = {
@@ -8,7 +7,7 @@ export const genericMeme: Command = {
   description: "Make a meme with no template from OpenAI and image search",
   run: async (interaction: ChatInputCommandInteraction) => {
     const memeImageBuffer = await generateMeme({
-      templateId: TemplateId.generic,
+      templateId: "generic",
     });
 
     await interaction.followUp({
