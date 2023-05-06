@@ -1,81 +1,65 @@
-# Turborepo starter
+# AI Meme Generator
 
-This is an official starter Turborepo.
+## Problem statement (what is it, why it is fun)
 
-## Using this example
+- A Discord bot that generates meme ideas using OpenAI prompt and create images from them
+- We love memes. Memes are funny.
 
-Run the following command:
+## Cloud Services Used
 
-```sh
-npx create-turbo@latest
-```
+1. Discord API for bot interactions
+2. OpenAI Chat API for meme idea generation
+3. ECS for orchestrating services including discord bot
+4. Amazon S3 for storing generated images
 
-## What's inside?
+## Architecture
 
-This Turborepo includes the following packages/apps:
+There are 3 services in our system: meme brain, meme image, and discord bot. All of them are containerized and deployed in an ECS cluster. Meme image service and discord bot needs access to the S3 bucket, so their task definitions have a role that can access it. Service discovery is done using AWS Service Connect (a feature of ECS). Both meme brain and meme image service are set up as a server in Service Connect, which gives them their own DNS address. The bot is set up as a Service Connect client, so it can access the other 2 services.
 
-### Apps and Packages
+### Meme Brain
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `ui`: a stub React component library shared by both `web` and `docs` applications
-- `eslint-config-custom`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `tsconfig`: `tsconfig.json`s used throughout the monorepo
+`POST /generate-idea`
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+- Can specify templateId and topic in body (optional)
+- Creates a prompt based on topic/template and sends the prompt to OpenAI
+- Response
+  - `templateId`: string
+  - `templateName`: string
+  - `memeContent`: Depends on template
 
-### Utilities
+### Meme Image
 
-This Turborepo has some additional tools already setup for you:
+`POST /generic_memes`: For generic memes
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+- Specify `picture, text0, text1` in body
+- Use duckduckgo-images-api to search an image using picture
+- Creates an image with canvas and uploads the image to S3
+- Response: image’s key in S3
 
-### Build
+`POST /caption_template`: For predefined meme templates
 
-To build all apps and packages, run the following command:
+- Specify `template(optional), text0, text1` in body
+- If template isn’t specified, random
+- Creates an image with canvas and uploads the image to S3
+- Response: image’s key in S3
 
-```
-cd my-turborepo
-pnpm build
-```
+## Discord bot commands
 
-### Develop
+`/getmeme`
 
-To develop all apps and packages, run the following command:
+- Fetch an AI generated meme from OpenAI via Meme Brain
+- Randomly choose a template from given list
+- Put captions into the image using Meme Image
 
-```
-cd my-turborepo
-pnpm dev
-```
+`/getgenericmeme`
 
-### Remote Caching
+- Make a meme with no template from OpenAI via Meme Brain and image search
+- Search new image using the AI generated text as a meme template from an image search engine via Meme Image
+- Put captions into the image using Meme Image
 
-Turborepo can use a technique known as [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+`/custommeme`
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup), then enter the following commands:
-
-```
-cd my-turborepo
-npx turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-npx turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks)
-- [Caching](https://turbo.build/repo/docs/core-concepts/caching)
-- [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching)
-- [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
-- [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
-- [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
+- Create a customized meme
+- Choose a template from a list including generic one
+- Write a topic as a prompt for generating specific meme ideas
+- Put captions into the image using Meme Image
